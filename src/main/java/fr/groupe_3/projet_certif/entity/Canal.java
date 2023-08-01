@@ -93,4 +93,27 @@ public class Canal {
                 + ", dateCreation=" + dateCreation + ", locked=" + locked + "]";
     }
 
+    // méthode updateNotNull pour le PATCH
+    public void updateNotNull(Canal canalPatch) {
+
+        // nomCanal
+        if (canalPatch.getNomCanal() != null) {
+            this.setNomCanal(canalPatch.getNomCanal());
+        }
+
+        // description
+        if (canalPatch.getDescriptionCanal() != null) {
+            this.setDescriptionCanal(canalPatch.getDescriptionCanal());
+        }
+
+        // dateCreation
+        if (canalPatch.getDateCreation() != null) {
+            this.setDateCreation(canalPatch.getDateCreation());
+        }
+
+        // locked
+        if (canalPatch.getLocked() != null) {
+            this.setLocked(canalPatch.getLocked());
+        }
+    }
 }
