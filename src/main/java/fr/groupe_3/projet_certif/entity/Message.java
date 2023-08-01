@@ -18,38 +18,36 @@ public class Message {
     // Attributs
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID idMessage;
+    private UUID messageId;
 
     @Column(name = "message")
     private String messageContent;
 
-    @Column(name = "date_message")
+    @Column(name = "message_date")
     private LocalDateTime messageDate;
 
-    @Column(name = "nom_utilisateur")
+    @Column(name = "user_name")
     private String userName;
 
     @ManyToOne
-    @Column(name = "canal_id")
-    private Canal canal;
+    @Column(name = "channel_id")
+    private Channel channel;
 
     // Constructeurs
-    public Message(String messageContent, LocalDateTime messageDate, String userName, Canal canal) {
+    public Message(String messageContent, LocalDateTime messageDate, String userName, Channel channel) {
         this.messageContent = messageContent;
         this.messageDate = messageDate;
         this.userName = userName;
-        this.canal = canal;
+        this.channel = channel;
     }
 
     // Constructeur vide
-
-    public UUID getIdMessage() {
-        return idMessage;
+    public Message() {
     }
 
     // Getters
-
-    public Message() {
+    public UUID getMessageId() {
+        return messageId;
     }
 
     public String getMessageContent() {
@@ -64,13 +62,13 @@ public class Message {
         return userName;
     }
 
-    public Canal getCanal() {
-        return canal;
+    public Channel getChannel() {
+        return channel;
     }
 
     // Setters
-    public void setIdMessage(UUID idMessage) {
-        this.idMessage = idMessage;
+    public void setMessageId(UUID messageId) {
+        this.messageId = messageId;
     }
 
     public void setMessageContent(String messageContent) {
@@ -85,15 +83,15 @@ public class Message {
         this.userName = userName;
     }
 
-    public void setCanal(Canal canal) {
-        this.canal = canal;
+    public void setChannel(Channel channel) {
+        this.channel = channel;
     }
 
     // To String
     @Override
     public String toString() {
-        return "Message [idMessage=" + idMessage + ", messageContent=" + messageContent + ", messageDate=" + messageDate
-                + ", userName=" + userName + ", canal=" + canal + "]";
+        return "Message [messageId=" + messageId + ", messageContent=" + messageContent + ", messageDate=" + messageDate
+                + ", userName=" + userName + ", channel=" + channel + "]";
     }
 
     // Méthode updateNotNull pour le PATCH
@@ -115,9 +113,9 @@ public class Message {
             this.setUserName(messagePatch.getUserName());
         }
 
-        // canal
-        if (messagePatch.getCanal() != null) {
-            this.setCanal(messagePatch.getCanal());
+        // channel
+        if (messagePatch.getChannel() != null) {
+            this.setChannel(messagePatch.getChannel());
         }
 
     }

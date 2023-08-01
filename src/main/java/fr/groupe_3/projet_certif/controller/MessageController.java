@@ -73,7 +73,7 @@ public class MessageController {
     public ResponseEntity<Message> putMessage(@PathVariable("id") UUID idMessage, @RequestBody Message updatedMessage) {
 
         // id en Json et id en body
-        if (!idMessage.equals(updatedMessage.getIdMessage())) {
+        if (!idMessage.equals(updatedMessage.getMessageId())) {
             return ResponseEntity.badRequest().build();
 
         }
@@ -91,7 +91,7 @@ public class MessageController {
             @RequestBody Message patchedMessage) {
 
         // id en Json et id en body
-        if (!idMessage.equals(patchedMessage.getIdMessage())) {
+        if (!idMessage.equals(patchedMessage.getMessageId())) {
             return ResponseEntity.badRequest().build();
 
         }
