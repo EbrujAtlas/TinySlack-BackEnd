@@ -1,13 +1,15 @@
 package fr.groupe_3.projet_certif.entity;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -18,19 +20,21 @@ public class Message {
     // Attributs
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID messageId;
+    private Long messageId;
 
     @Column(name = "message")
     private String messageContent;
 
     @Column(name = "message_date")
+    // ajout de l'heure de création automatiquement
+    @CreationTimestamp
     private LocalDateTime messageDate;
 
     @Column(name = "user_name")
     private String userName;
 
     @ManyToOne
-    @Column(name = "channel_id")
+    @JoinColumn(name = "channel_id")
     private Channel channel;
 
     // Constructeurs
@@ -46,7 +50,7 @@ public class Message {
     }
 
     // Getters
-    public UUID getMessageId() {
+    public Long getMessageId() {
         return messageId;
     }
 
@@ -67,7 +71,7 @@ public class Message {
     }
 
     // Setters
-    public void setMessageId(UUID messageId) {
+    public void setMessageId(Long messageId) {
         this.messageId = messageId;
     }
 

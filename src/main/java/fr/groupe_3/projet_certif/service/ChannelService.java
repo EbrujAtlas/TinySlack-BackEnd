@@ -2,7 +2,6 @@ package fr.groupe_3.projet_certif.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,21 +22,23 @@ public class ChannelService {
 
     /**
      * 
-     * @param idChannel
+     * @param channelId
      * @return
      */
     // Get one
-    public Optional<Channel> getOneChannelById(UUID idChannel) {
-        return channelRepository.findById(idChannel);
+    public Optional<Channel> getOneChannelById(Long channelId) {
+        return channelRepository.findById(channelId);
     }
 
     /**
      * 
-     * @param idChannel
+     * @param channelId
      */
     // Delete one
-    public void deleteById(UUID idChannel) {
-        channelRepository.deleteById(idChannel);
+    public void deleteById(Long channelId) {
+
+        channelRepository.deleteById(channelId);
+
     }
 
     // Post one
@@ -46,14 +47,14 @@ public class ChannelService {
     }
 
     // Put
-    public void updatedChannel(UUID idChannel, Channel channel) {
+    public void updatedChannel(Long channelId, Channel channel) {
         channelRepository.save(channel);
     }
 
     // Patch
-    public void patchChannel(UUID idChannel, Channel channelPatch) {
+    public void patchChannel(Long channelId, Channel channelPatch) {
 
-        Optional<Channel> optional = channelRepository.findById(idChannel);
+        Optional<Channel> optional = channelRepository.findById(channelId);
 
         if (optional.isPresent()) {
 

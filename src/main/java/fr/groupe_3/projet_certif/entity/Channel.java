@@ -1,7 +1,8 @@
 package fr.groupe_3.projet_certif.entity;
 
 import java.time.LocalDate;
-import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,7 +18,7 @@ public class Channel {
     // Attributs
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID channelId;
+    private Long channelId;
 
     @Column(name = "channel_name")
     private String channelName;
@@ -26,13 +27,15 @@ public class Channel {
     private String channelDescription;
 
     @Column(name = "creation_date")
+    // ajout de l'heure de création automatiquement
+    @CreationTimestamp
     private LocalDate creationDate;
 
     // 0 = libre, 1 = verrouillé
     @Column(name = "protection")
     private Integer locked;
 
-    // Contructeur
+    // Constructeur
     public Channel(String channelName, String channelDescription, LocalDate creationDate, Integer locked) {
         this.channelName = channelName;
         this.channelDescription = channelDescription;
@@ -45,7 +48,7 @@ public class Channel {
     }
 
     // Getters
-    public UUID getChannelId() {
+    public Long getChannelId() {
         return channelId;
     }
 
@@ -66,7 +69,7 @@ public class Channel {
     }
 
     // Setters
-    public void setChannellId(UUID channelId) {
+    public void setChannellId(Long channelId) {
         this.channelId = channelId;
     }
 
@@ -89,7 +92,7 @@ public class Channel {
     // To string
     @Override
     public String toString() {
-        return "Canal [channelId=" + channelId + ", channelName=" + channelName + ", channelDescription="
+        return "Channel [channelId=" + channelId + ", channelName=" + channelName + ", channelDescription="
                 + channelDescription
                 + ", creationDate=" + creationDate + ", locked=" + locked + "]";
     }
@@ -105,11 +108,6 @@ public class Channel {
         // channelDescription
         if (channelPatch.getChannelDescription() != null) {
             this.setChannelDescription(channelPatch.getChannelDescription());
-        }
-
-        // dateCreation
-        if (channelPatch.getCreationDate() != null) {
-            this.setCreationDate(channelPatch.getCreationDate());
         }
 
         // locked

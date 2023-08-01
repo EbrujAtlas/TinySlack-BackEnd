@@ -2,7 +2,6 @@ package fr.groupe_3.projet_certif.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,21 +22,21 @@ public class MessageService {
 
     /**
      * 
-     * @param idMessage
+     * @param messageId
      * @return
      */
     // Get one
-    public Optional<Message> getOneMessageById(UUID idMessage) {
-        return messageRepository.findById(idMessage);
+    public Optional<Message> getOneMessageById(Long messageId) {
+        return messageRepository.findById(messageId);
     }
 
     /**
      * 
-     * @param idMessage
+     * @param messageId
      */
     // Delete one
-    public void deleteById(UUID idMessage) {
-        messageRepository.deleteById(idMessage);
+    public void deleteById(Long messageId) {
+        messageRepository.deleteById(messageId);
     }
 
     // Post one
@@ -46,14 +45,14 @@ public class MessageService {
     }
 
     // Put
-    public void updatedMessage(UUID idMessage, Message message) {
+    public void updatedMessage(Long messageId, Message message) {
         messageRepository.save(message);
     }
 
     // Patch
-    public void patchMessage(UUID idMessage, Message messagePatch) {
+    public void patchMessage(Long messageId, Message messagePatch) {
 
-        Optional<Message> optional = messageRepository.findById(idMessage);
+        Optional<Message> optional = messageRepository.findById(messageId);
 
         if (optional.isPresent()) {
 
