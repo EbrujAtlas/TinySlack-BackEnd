@@ -2,6 +2,7 @@ package fr.groupe_3.projet_certif.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import fr.groupe_3.projet_certif.entity.Message;
 import fr.groupe_3.projet_certif.service.MessageService;
 
-//A modifier quand on fera le frontend par @Controller
 @RestController
 @RequestMapping("tinyslack")
 public class MessageController {
@@ -33,7 +33,7 @@ public class MessageController {
     }
 
     @GetMapping("messages/{id}")
-    public ResponseEntity<Message> getMessageById(@PathVariable("id") Long idMessage) {
+    public ResponseEntity<Message> getMessageById(@PathVariable("id") UUID idMessage) {
         Optional<Message> cOptional = messageService.getOneMessageById(idMessage);
 
         if (cOptional.isPresent()) {
@@ -56,7 +56,7 @@ public class MessageController {
     }
 
     @DeleteMapping("messages/{id}")
-    public ResponseEntity<String> deleteMessage(@PathVariable("id") Long idMessage) {
+    public ResponseEntity<String> deleteMessage(@PathVariable("id") UUID idMessage) {
 
         if (messageService.getOneMessageById(idMessage).isEmpty()) {
 
@@ -69,10 +69,10 @@ public class MessageController {
     }
 
     @PutMapping("messages/{id}")
-    public ResponseEntity<Message> putMessage(@PathVariable("id") Long idMessage, @RequestBody Message updatedMessage) {
+    public ResponseEntity<Message> putMessage(@PathVariable("id") UUID idMessage, @RequestBody Message putMessage) {
 
         // id en Json et id en body
-        if (!idMessage.equals(updatedMessage.getMessageId())) {
+        if (!idMessage.equals(putMessage.getMessageId())) {
             return ResponseEntity.badRequest().build();
 
         }
@@ -81,12 +81,12 @@ public class MessageController {
 
         }
 
-        messageService.updatedMessage(idMessage, updatedMessage);
+        Message updatedMessage = messageService.updatedMessage(idMessage, putMessage);
         return ResponseEntity.ok(updatedMessage);
     }
 
     @PatchMapping("messages/{id}")
-    public ResponseEntity<Object> patchMessage(@PathVariable("id") Long idMessage,
+    public ResponseEntity<Object> patchMessage(@PathVariable("id") UUID idMessage,
             @RequestBody Message patchedMessage) {
 
         // id en Json et id en body
