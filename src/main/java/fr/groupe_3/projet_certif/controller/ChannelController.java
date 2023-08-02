@@ -31,9 +31,9 @@ public class ChannelController {
         return channelService.getAllChannels();
     }
 
-    @GetMapping("channels/{id}")
-    public ResponseEntity<Channel> getChannelById(@PathVariable("id") Long channelId) {
-        Optional<Channel> channelToGet = channelService.getOneChannelById(channelId);
+    @GetMapping("channels/{name}")
+    public ResponseEntity<Channel> getChannelByName(@PathVariable("name") String channelName) {
+        Optional<Channel> channelToGet = channelService.getOneChannelByName(channelName);
 
         if (channelToGet.isPresent()) {
             Channel channel = channelToGet.get();
@@ -52,10 +52,10 @@ public class ChannelController {
 
     }
 
-    @DeleteMapping("channels/{id}")
-    public ResponseEntity<String> deleteChannel(@PathVariable("id") Long channelId) {
+    @DeleteMapping("channels/{name}")
+    public ResponseEntity<String> deleteChannel(@PathVariable("name") String channelName) {
 
-        Optional<Channel> channelToDelete = channelService.getOneChannelById(channelId);
+        Optional<Channel> channelToDelete = channelService.getOneChannelByName(channelName);
 
         // si le canal n'existe pas, renvoyer une erreur "Not Found"
         if (channelToDelete.isEmpty()) {
@@ -67,24 +67,24 @@ public class ChannelController {
             return ResponseEntity.badRequest().build();
         }
 
-        channelService.deleteById(channelId);
+        channelService.deleteByName(channelName);
         return ResponseEntity.ok("Le canal a bien été supprimé");
 
     }
 
-    @PutMapping("channels/{id}")
-    public ResponseEntity<Channel> putChannel(@PathVariable("id") Long channelId, @RequestBody Channel updatedChannel) {
+    @PutMapping("channels/{name}")
+    public ResponseEntity<Channel> putChannel(@PathVariable("name") String channelName, @RequestBody Channel updatedChannel) {
 
-        Optional<Channel> channelToPut = channelService.getOneChannelById(channelId);
+        Optional<Channel> channelToPut = channelService.getOneChannelByName(channelName);
 
         // si le canal n'existe pas, renvoyer une erreur "Not Found"
         if (channelToPut.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        // si l'id en Json et l'id renvoyé par le body ne sont pas identiques,
+        // si le nom en Json et le nom renvoyé par le body ne sont pas identiques,
         // renvoyer une erreur "Bad Request"
-        if (!channelId.equals(updatedChannel.getChannelId())) {
+        if (!channelName.equals(updatedChannel.getChannelName())) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -93,15 +93,16 @@ public class ChannelController {
             return ResponseEntity.badRequest().build();
         }
 
+        channelService.updatedChannel(channelName, updatedChannel);
         return ResponseEntity.ok(updatedChannel);
 
     }
 
-    @PatchMapping("channels/{id}")
-    public ResponseEntity<Optional<Channel>> patchChannel(@PathVariable("id") Long channelId,
+    @PatchMapping("channels/{name}")
+    public ResponseEntity<Optional<Channel>> patchChannel(@PathVariable("name") String channelName,
             @RequestBody Channel patchedChannel) {
 
-        Optional<Channel> channelToPatch = channelService.getOneChannelById(channelId);
+        Optional<Channel> channelToPatch = channelService.getOneChannelByName(channelName);
 
         // si le canal n'existe pas, renvoyer une erreur "Not Found"
         if (channelToPatch.isEmpty()) {
@@ -110,7 +111,7 @@ public class ChannelController {
 
         // si l'id en Json et l'id renvoyé par le body ne sont pas identiques,
         // renvoyer une erreur "Bad Request"
-        if (!channelId.equals(patchedChannel.getChannelId())) {
+        if (!channelName.equals(patchedChannel.getChannelName())) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -119,7 +120,7 @@ public class ChannelController {
             return ResponseEntity.badRequest().build();
         }
 
-        channelService.patchChannel(channelId, patchedChannel);
+        channelService.patchChannel(channelName, patchedChannel);
         return ResponseEntity.ok(channelToPatch);
 
     }

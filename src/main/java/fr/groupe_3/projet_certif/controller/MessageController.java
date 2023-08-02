@@ -2,6 +2,7 @@ package fr.groupe_3.projet_certif.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class MessageController {
     }
 
     @GetMapping("messages/{id}")
-    public ResponseEntity<Message> getMessageById(@PathVariable("id") Long idMessage) {
+    public ResponseEntity<Message> getMessageById(@PathVariable("id") UUID idMessage) {
         Optional<Message> cOptional = messageService.getOneMessageById(idMessage);
 
         if (cOptional.isPresent()) {
@@ -56,7 +57,7 @@ public class MessageController {
     }
 
     @DeleteMapping("messages/{id}")
-    public ResponseEntity<String> deleteMessage(@PathVariable("id") Long idMessage) {
+    public ResponseEntity<String> deleteMessage(@PathVariable("id") UUID idMessage) {
 
         if (messageService.getOneMessageById(idMessage).isEmpty()) {
 
@@ -69,7 +70,7 @@ public class MessageController {
     }
 
     @PutMapping("messages/{id}")
-    public ResponseEntity<Message> putMessage(@PathVariable("id") Long idMessage, @RequestBody Message updatedMessage) {
+    public ResponseEntity<Message> putMessage(@PathVariable("id") UUID idMessage, @RequestBody Message updatedMessage) {
 
         // id en Json et id en body
         if (!idMessage.equals(updatedMessage.getMessageId())) {
@@ -86,7 +87,7 @@ public class MessageController {
     }
 
     @PatchMapping("messages/{id}")
-    public ResponseEntity<Object> patchMessage(@PathVariable("id") Long idMessage,
+    public ResponseEntity<Object> patchMessage(@PathVariable("id") UUID idMessage,
             @RequestBody Message patchedMessage) {
 
         // id en Json et id en body
