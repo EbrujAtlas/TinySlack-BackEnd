@@ -9,7 +9,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.annotations.UuidGenerator.Style;
 
-
 import jakarta.persistence.Column;
 
 import jakarta.persistence.Entity;
@@ -28,16 +27,14 @@ public class Channel {
     @Id
     @GeneratedValue
     @UuidGenerator(style = Style.AUTO)
-    @Column(name = "channel_id")
+
     private UUID channelId;
 
-    @Column(name = "channel_name")
     private String channelName;
 
     @Column(name = "description")
     private String channelDescription;
 
-    @Column(name = "creation_date")
     // ajout de l'heure de création automatiquement
     @CreationTimestamp
     private LocalDate creationDate;
@@ -63,16 +60,16 @@ public class Channel {
     @Column(name = "protection")
     private Integer locked;
 
-    // Constructeur
+    // Constructeur vide
+    public Channel() {
+    }
+
+    // Constructeur avec arguments
     public Channel(String channelName, String channelDescription, LocalDate creationDate, Integer locked) {
         this.channelName = channelName;
         this.channelDescription = channelDescription;
         this.creationDate = creationDate;
         this.locked = locked;
-    }
-
-    // Constructeur vide
-    public Channel() {
     }
 
     // Getters
@@ -132,7 +129,11 @@ public class Channel {
                 + channelDescription + ", creationDate=" + creationDate + ", user=" + user + ", locked=" + locked + "]";
     }
 
-    // Méthode updateNotNull pour le PATCH
+    /**
+     * Méthode updateNotNull pour le PATCH
+     * 
+     * @param channelPatch
+     */
     public void updateNotNull(Channel channelPatch) {
 
         // channelName

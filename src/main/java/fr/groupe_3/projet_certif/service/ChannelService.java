@@ -16,44 +16,62 @@ public class ChannelService {
     @Autowired
     ChannelRepository channelRepository;
 
-    // Get all
+    /**
+     * Get all channels
+     * 
+     * @return
+     */
     public List<Channel> getAllChannels() {
         return channelRepository.findAll();
     }
 
     /**
+     * Get one channel by name
      * 
      * @param channelName
      * @return
      */
-    // Get one
     public Optional<Channel> getOneChannelByName(String channelName) {
         return channelRepository.findByChannelName(channelName);
     }
 
     /**
+     * Delete a channel by name
      * 
      * @param channelName
      */
-    // Delete one
     @Transactional
     public void deleteByName(String channelName) {
-
         channelRepository.deleteByChannelName(channelName);
-
     }
 
-    // Post one
+    /**
+     * Create a new channel
+     * 
+     * @param channel
+     * @return
+     */
     public Channel addChannel(Channel channel) {
         return channelRepository.save(channel);
     }
 
-    // Put
-    public void updatedChannel(String channelName, Channel channel) {
-        channelRepository.save(channel);
+    /**
+     * Update a channel
+     * 
+     * @param channelName
+     * @param channel
+     * @return
+     */
+    public Channel updatedChannel(String channelName, Channel channel) {
+        return channelRepository.save(channel);
     }
 
-    // Patch
+    /**
+     * Patch a channel
+     * 
+     * @param channelName
+     * @param channelPatch
+     */
     public void patchChannel(String channelName, Channel channelPatch) {
 
         Optional<Channel> optional = channelRepository.findByChannelName(channelName);
@@ -61,7 +79,6 @@ public class ChannelService {
         if (optional.isPresent()) {
 
             Channel channel = optional.get();
-            System.out.println(channel);
             channel.updateNotNull(channelPatch);
             channelRepository.save(channel);
 

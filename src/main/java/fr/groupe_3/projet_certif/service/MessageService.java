@@ -16,41 +16,61 @@ public class MessageService {
     @Autowired
     MessageRepository messageRepository;
 
-    // Get all
+    /**
+     * Get all messages
+     * 
+     * @return
+     */
     public List<Message> getAllMessages() {
         return messageRepository.findAll();
     }
 
     /**
+     * Get one By Id
      * 
      * @param messageId
      * @return
      */
-    // Get one
     public Optional<Message> getOneMessageById(UUID messageId) {
         return messageRepository.findById(messageId);
     }
 
     /**
+     * Delete one by Id
      * 
      * @param messageId
      */
-    // Delete one
     public void deleteById(UUID messageId) {
         messageRepository.deleteById(messageId);
     }
 
-    // Post one
+    /**
+     * Create a new message
+     * 
+     * @param message
+     * @return
+     */
     public Message addMessage(Message message) {
         return messageRepository.save(message);
     }
 
-    // Put
-    public void updatedMessage(UUID messageId, Message message) {
-        messageRepository.save(message);
+    /**
+     * Update a message
+     * 
+     * @param messageId
+     * @param message
+     * @return
+     */
+    public Message updatedMessage(UUID messageId, Message message) {
+        return messageRepository.save(message);
     }
 
-    // Patch
+    /**
+     * Patch a message
+     * 
+     * @param messageId
+     * @param messagePatch
+     */
     public void patchMessage(UUID messageId, Message messagePatch) {
 
         Optional<Message> optional = messageRepository.findById(messageId);
@@ -58,7 +78,6 @@ public class MessageService {
         if (optional.isPresent()) {
 
             Message message = optional.get();
-            System.out.println(message);
             message.updateNotNull(messagePatch);
             messageRepository.save(message);
 

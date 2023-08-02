@@ -16,38 +16,72 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
+    /**
+     * Get all users
+     * 
+     * @return
+     */
     public List<User> getUsers() {
         return userRepository.findAll();
-
     }
 
+    /**
+     * Get one by name
+     * 
+     * @param userName
+     * @return
+     */
     public Optional<User> getUserByUserName(String userName) {
-
         return userRepository.findByUserName(userName);
-
     }
 
+    /**
+     * Create a new User
+     * 
+     * @param user
+     * @return
+     */
     public User addUser(User user) {
         return userRepository.save(user);
     }
 
+    /**
+     * Delete one by name
+     * 
+     * @param userName
+     */
     @Transactional
     public void deleteByUserName(String userName) {
         userRepository.deleteByUserName(userName);
     }
 
-    public void updateUser(String userName, User putUser) {
-        userRepository.save(putUser);
+    /**
+     * Update an user
+     * 
+     * @param userName
+     * @param putUser
+     * @return
+     */
+    public User updateUser(String userName, User putUser) {
+        return userRepository.save(putUser);
     }
 
+    /**
+     * Patch an user
+     * 
+     * @param userName
+     * @param patchUser
+     */
     public void patchUser(String userName, User patchUser) {
+
         Optional<User> optional = userRepository.findByUserName(userName);
 
         if (optional.isPresent()) {
+
             User userToPatch = optional.get();
             userToPatch.updateNotNull(patchUser);
-            System.out.println(userToPatch);
             userRepository.save(userToPatch);
+
         }
 
     }

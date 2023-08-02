@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import fr.groupe_3.projet_certif.entity.User;
 import fr.groupe_3.projet_certif.service.UserService;
 
-//A modifier quand on fera le frontend par @Controller
 @RestController
 @RequestMapping("tinyslack")
 public class UserController {

@@ -23,13 +23,11 @@ public class Message {
     @Id
     @GeneratedValue
     @UuidGenerator(style = Style.AUTO)
-    @Column(name = "message_id")
     private UUID messageId;
 
     @Column(name = "message")
     private String messageContent;
 
-    @Column(name = "message_date")
     // ajout de l'heure de création automatiquement
     @CreationTimestamp
     private LocalDateTime messageDate;
@@ -42,16 +40,16 @@ public class Message {
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
-    // Constructeurs
+    // Constructeur vide
+    public Message() {
+    }
+
+    // Constructeur avec arguments
     public Message(String messageContent, LocalDateTime messageDate, User user, Channel channel) {
         this.messageContent = messageContent;
         this.messageDate = messageDate;
         this.user = user;
         this.channel = channel;
-    }
-
-    // Constructeur vide
-    public Message() {
     }
 
     // Getters
@@ -103,8 +101,11 @@ public class Message {
                 + ", user=" + user + ", channel=" + channel + "]";
     }
 
-    // Méthode updateNotNull pour le PATCH
-
+    /**
+     * Méthode updateNotNull pour le PATCH
+     * 
+     * @param messagePatch
+     */
     public void updateNotNull(Message messagePatch) {
 
         // messageContent

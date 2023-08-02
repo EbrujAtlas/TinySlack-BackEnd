@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import fr.groupe_3.projet_certif.entity.Message;
 import fr.groupe_3.projet_certif.service.MessageService;
 
-//A modifier quand on fera le frontend par @Controller
 @RestController
 @RequestMapping("tinyslack")
 public class MessageController {
@@ -70,10 +69,10 @@ public class MessageController {
     }
 
     @PutMapping("messages/{id}")
-    public ResponseEntity<Message> putMessage(@PathVariable("id") UUID idMessage, @RequestBody Message updatedMessage) {
+    public ResponseEntity<Message> putMessage(@PathVariable("id") UUID idMessage, @RequestBody Message putMessage) {
 
         // id en Json et id en body
-        if (!idMessage.equals(updatedMessage.getMessageId())) {
+        if (!idMessage.equals(putMessage.getMessageId())) {
             return ResponseEntity.badRequest().build();
 
         }
@@ -82,7 +81,7 @@ public class MessageController {
 
         }
 
-        messageService.updatedMessage(idMessage, updatedMessage);
+        Message updatedMessage = messageService.updatedMessage(idMessage, putMessage);
         return ResponseEntity.ok(updatedMessage);
     }
 

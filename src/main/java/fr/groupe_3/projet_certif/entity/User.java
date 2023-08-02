@@ -5,7 +5,6 @@ import java.util.UUID;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.annotations.UuidGenerator.Style;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 
@@ -20,15 +19,12 @@ public class User {
     @Id
     @GeneratedValue
     @UuidGenerator(style = Style.AUTO)
-    @Column(name = "user_id")
     private UUID userId;
 
-    @Column(name = "user_name")
     private String userName;
 
     private String password;
 
-    @Column(name = "user_mail")
     private String userMail;
 
     // Constructeur
@@ -76,7 +72,11 @@ public class User {
                 + "]";
     }
 
-    // Méthode updateNotNull pour le PATCH
+    /**
+     * Méthode updateNotNull pour le PATCH
+     * 
+     * @param userPatch
+     */
     public void updateNotNull(User userPatch) {
 
         if (userPatch.getUserName() != null) {
