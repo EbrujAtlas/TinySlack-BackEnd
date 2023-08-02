@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import fr.groupe_3.projet_certif.dao.UserRepository;
 import fr.groupe_3.projet_certif.entity.User;
@@ -20,9 +21,9 @@ public class UserService {
 
     }
 
-    public Optional<User> getUserById(Long id) {
+    public Optional<User> getUserByUserName(String userName) {
 
-        return userRepository.findById(id);
+        return userRepository.findByUserName(userName);
 
     }
 
@@ -30,17 +31,17 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void deleteById(Long id) {
-        userRepository.deleteById(id);
+    @Transactional
+    public void deleteByUserName(String userName) {
+        userRepository.deleteByUserName(userName);
     }
 
-    public void updateUser(Long id, User putUser) {
+    public void updateUser(String userName, User putUser) {
         userRepository.save(putUser);
-
     }
 
-    public void patchUser(Long id, User patchUser) {
-        Optional<User> optional = userRepository.findById(id);
+    public void patchUser(String userName, User patchUser) {
+        Optional<User> optional = userRepository.findByUserName(userName);
 
         if (optional.isPresent()) {
             User userToPatch = optional.get();

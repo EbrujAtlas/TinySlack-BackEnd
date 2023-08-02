@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import fr.groupe_3.projet_certif.dao.ChannelRepository;
 import fr.groupe_3.projet_certif.entity.Channel;
@@ -22,22 +23,23 @@ public class ChannelService {
 
     /**
      * 
-     * @param channelId
+     * @param channelName
      * @return
      */
     // Get one
-    public Optional<Channel> getOneChannelById(Long channelId) {
-        return channelRepository.findById(channelId);
+    public Optional<Channel> getOneChannelByName(String channelName) {
+        return channelRepository.findByChannelName(channelName);
     }
 
     /**
      * 
-     * @param channelId
+     * @param channelName
      */
     // Delete one
-    public void deleteById(Long channelId) {
+    @Transactional
+    public void deleteByName(String channelName) {
 
-        channelRepository.deleteById(channelId);
+        channelRepository.deleteByChannelName(channelName);
 
     }
 
@@ -47,14 +49,14 @@ public class ChannelService {
     }
 
     // Put
-    public void updatedChannel(Long channelId, Channel channel) {
+    public void updatedChannel(String channelName, Channel channel) {
         channelRepository.save(channel);
     }
 
     // Patch
-    public void patchChannel(Long channelId, Channel channelPatch) {
+    public void patchChannel(String channelName, Channel channelPatch) {
 
-        Optional<Channel> optional = channelRepository.findById(channelId);
+        Optional<Channel> optional = channelRepository.findByChannelName(channelName);
 
         if (optional.isPresent()) {
 

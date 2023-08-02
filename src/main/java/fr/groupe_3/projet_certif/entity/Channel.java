@@ -1,14 +1,23 @@
 package fr.groupe_3.projet_certif.entity;
 
 import java.time.LocalDate;
+//import java.util.ArrayList;
+//import java.util.List;
+import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.annotations.UuidGenerator.Style;
+
 
 import jakarta.persistence.Column;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+//import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -17,8 +26,10 @@ public class Channel {
 
     // Attributs
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long channelId;
+    @GeneratedValue
+    @UuidGenerator(style = Style.AUTO)
+    @Column(name = "channel_id")
+    private UUID channelId;
 
     @Column(name = "channel_name")
     private String channelName;
@@ -30,6 +41,23 @@ public class Channel {
     // ajout de l'heure de création automatiquement
     @CreationTimestamp
     private LocalDate creationDate;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    /*
+     * @ManyToMany
+     * List<User> users = new ArrayList<>();
+     * 
+     * public List<User> getUsers() {
+     * return users;
+     * }
+     * 
+     * public void setUsers(List<User> users) {
+     * this.users = users;
+     * }
+     */
 
     // 0 = libre, 1 = verrouillé
     @Column(name = "protection")
@@ -48,7 +76,7 @@ public class Channel {
     }
 
     // Getters
-    public Long getChannelId() {
+    public UUID getChannelId() {
         return channelId;
     }
 
@@ -64,12 +92,16 @@ public class Channel {
         return creationDate;
     }
 
+    public User getUser() {
+        return user;
+    }
+
     public Integer getLocked() {
         return locked;
     }
 
     // Setters
-    public void setChannellId(Long channelId) {
+    public void setChannelId(UUID channelId) {
         this.channelId = channelId;
     }
 
@@ -85,6 +117,10 @@ public class Channel {
         this.creationDate = creationDate;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public void setLocked(Integer locked) {
         this.locked = locked;
     }
@@ -93,8 +129,7 @@ public class Channel {
     @Override
     public String toString() {
         return "Channel [channelId=" + channelId + ", channelName=" + channelName + ", channelDescription="
-                + channelDescription
-                + ", creationDate=" + creationDate + ", locked=" + locked + "]";
+                + channelDescription + ", creationDate=" + creationDate + ", user=" + user + ", locked=" + locked + "]";
     }
 
     // Méthode updateNotNull pour le PATCH
@@ -108,6 +143,11 @@ public class Channel {
         // channelDescription
         if (channelPatch.getChannelDescription() != null) {
             this.setChannelDescription(channelPatch.getChannelDescription());
+        }
+
+        // user
+        if (channelPatch.getUser() != null) {
+            this.setUser(channelPatch.getUser());
         }
 
         // locked

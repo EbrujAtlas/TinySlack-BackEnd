@@ -1,8 +1,14 @@
 package fr.groupe_3.projet_certif.entity;
 
+import java.util.UUID;
+
+import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.annotations.UuidGenerator.Style;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -10,20 +16,27 @@ import jakarta.persistence.Table;
 @Table(name = "users")
 public class User {
 
+    // Attributs
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    @GeneratedValue
+    @UuidGenerator(style = Style.AUTO)
+    @Column(name = "user_id")
+    private UUID userId;
 
+    @Column(name = "user_name")
     private String userName;
 
     private String password;
 
+    @Column(name = "user_mail")
     private String userMail;
 
+    // Constructeur
     public User() {
     }
 
-    public Long getUserId() {
+    // Getters
+    public UUID getUserId() {
         return userId;
     }
 
@@ -39,7 +52,8 @@ public class User {
         return userMail;
     }
 
-    public void setUserId(Long userId) {
+    // Setters
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
@@ -55,12 +69,14 @@ public class User {
         this.userMail = userMail;
     }
 
+    // To string
     @Override
     public String toString() {
         return "User [userId=" + userId + ", userName=" + userName + ", password=" + password + ", userMail=" + userMail
                 + "]";
     }
 
+    // Méthode updateNotNull pour le PATCH
     public void updateNotNull(User userPatch) {
 
         if (userPatch.getUserName() != null) {
