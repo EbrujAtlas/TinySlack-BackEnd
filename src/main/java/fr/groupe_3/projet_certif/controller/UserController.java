@@ -113,9 +113,9 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
 
-        // si le nom en url et le nom renvoyé par le corps de la requête ne sont pas
-        // identiques, renvoie une erreur "Bad Request"
-        if (!userName.equals(modifiedUser.getUserName())) {
+        // si le nom en url renvoie vers une entrée en BB dont l'id est différent de celui dans le corps de la requête,
+        // renvoie une erreur "Bad Request"
+        if (!userToPut.get().getUserId().equals(modifiedUser.getUserId())) {
             return ResponseEntity.badRequest().build();
         }
 
