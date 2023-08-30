@@ -87,7 +87,8 @@ public class ChannelController {
 
         // si le canal est vérouillé, renvoie une erreur "Bad Request"
         if (channelToDelete.get().getLocked() == 1) {
-            return ResponseEntity.badRequest().header("Erreur", "Ce canal est vérouillé et ne peut être supprimé").build();
+            return ResponseEntity.badRequest().header("Erreur", "Ce canal est vérouillé et ne peut être supprimé")
+                    .build();
         }
 
         // si le canal existe et n'est pas vérouillé, supprime le canal
@@ -117,17 +118,19 @@ public class ChannelController {
         // si le nom en url et le nom renvoyé par le corps de la requête ne sont pas
         // identiques, renvoie une erreur "Bad Request"
         if (!channelName.equals(modifiedChannel.getChannelName())) {
-            return ResponseEntity.badRequest().header("Erreur", "Ce canal ne correspond pas à la modification demandée").build();
+            return ResponseEntity.badRequest().header("Erreur", "Ce canal ne correspond pas à la modification demandée")
+                    .build();
         }
 
         // si le canal est vérouillé, renvoie une erreur "Bad Request"
         if (channelToPut.get().getLocked() == 1) {
-            return ResponseEntity.badRequest().header("Erreur", "Ce canal est vérouillé et ne peut être modifié").build();
+            return ResponseEntity.badRequest().header("Erreur", "Ce canal est vérouillé et ne peut être modifié")
+                    .build();
         }
 
         // si le canal existe, que le nom en url et en corps de la requête
         // correspondent; et que le canal n'est pas vérouillé, celui-ci est modifié
-        Channel updatedChannel = channelService.updatedChannel(channelName, modifiedChannel);
+        Channel updatedChannel = channelService.updatedChannel(modifiedChannel);
         return ResponseEntity.ok(updatedChannel);
 
     }
@@ -153,12 +156,14 @@ public class ChannelController {
         // si le nom en url et le nom renvoyé par le corps de la requête ne sont pas
         // identiques, renvoie une erreur "Bad Request"
         if (!channelName.equals(patchedChannel.getChannelName())) {
-            return ResponseEntity.badRequest().header("Erreur", "Ce canal ne correspond pas à la modification demandée").build();
+            return ResponseEntity.badRequest().header("Erreur", "Ce canal ne correspond pas à la modification demandée")
+                    .build();
         }
 
         // si le canal est vérouillé, renvoie une erreur "Bad Request"
         if (channelToPatch.get().getLocked() == 1) {
-            return ResponseEntity.badRequest().header("Erreur", "Ce canal est vérouillé et ne peut être modifié").build();
+            return ResponseEntity.badRequest().header("Erreur", "Ce canal est vérouillé et ne peut être modifié")
+                    .build();
         }
 
         channelService.patchChannel(channelName, patchedChannel);

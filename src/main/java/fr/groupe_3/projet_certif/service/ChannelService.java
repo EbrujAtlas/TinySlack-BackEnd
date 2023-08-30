@@ -62,7 +62,7 @@ public class ChannelService {
      * @param channel
      * @return
      */
-    public Channel updatedChannel(String channelName, Channel channel) {
+    public Channel updatedChannel(Channel channel) {
         return channelRepository.save(channel);
     }
 
