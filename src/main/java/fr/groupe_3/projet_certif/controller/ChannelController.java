@@ -56,9 +56,11 @@ public class ChannelController {
     @PostMapping("channels")
     public ResponseEntity<Object> saveChannel(@RequestBody Channel newChannel) {
 
+        Optional<Channel> channelToPost = channelService.getOneChannelByName(newChannel.getChannelName());
+
         // si le nom dans le corps de la requête correspond à un canal existant,
         // renvoie une erreur "Bad Request"
-        if (channelService.getOneChannelByName(newChannel.getChannelName()).isPresent()) {
+        if (channelToPost.isPresent()) {
             return ResponseEntity.badRequest().header("Erreur", "Ce canal existe déjà").build();
         }
 
@@ -87,8 +89,7 @@ public class ChannelController {
 
         // si le canal est vérouillé, renvoie une erreur "Bad Request"
         if (channelToDelete.get().getLocked() == 1) {
-            return ResponseEntity.badRequest().header("Erreur", "Ce canal est vérouillé et ne peut être supprimé")
-                    .build();
+            return ResponseEntity.badRequest().body("Le canal est verouillé, suppression impossible");
         }
 
         // si le canal existe et n'est pas vérouillé, supprime le canal
@@ -139,12 +140,12 @@ public class ChannelController {
      * PATCH sur l'url "tinyslack/channels/{name}" pour modifier un canal existant
      * 
      * @param channelName
-     * @param patchedChannel
+     * @param patch
      * @return
      */
     @PatchMapping("channels/{name}")
     public ResponseEntity<Object> patchChannel(@PathVariable("name") String channelName,
-            @RequestBody Channel patchedChannel) {
+            @RequestBody Channel patch) {
 
         Optional<Channel> channelToPatch = channelService.getOneChannelByName(channelName);
 
@@ -155,7 +156,7 @@ public class ChannelController {
 
         // si le nom en url et le nom renvoyé par le corps de la requête ne sont pas
         // identiques, renvoie une erreur "Bad Request"
-        if (!channelName.equals(patchedChannel.getChannelName())) {
+        if (!channelName.equals(patch.getChannelName())) {
             return ResponseEntity.badRequest().header("Erreur", "Ce canal ne correspond pas à la modification demandée")
                     .build();
         }
@@ -166,8 +167,11 @@ public class ChannelController {
                     .build();
         }
 
-        channelService.patchChannel(channelName, patchedChannel);
+        channelService.patchChannel(channelName, patch);
         return ResponseEntity.ok(channelToPatch);
+
+        // channelToPatch = channelService.getOneChannelByName(channelName);
+        // On ne peut pas changer le nom, preuve:ligne 157-160:
 
     }
 

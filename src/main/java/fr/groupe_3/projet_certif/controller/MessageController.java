@@ -111,7 +111,7 @@ public class MessageController {
 
         // si l'id en url existe en BDD et correspond à celui renvoyé par le corps de la
         // requête, le message est modifié
-        Message updatedMessage = messageService.updatedMessage(messageId, modifiedMessage);
+        Message updatedMessage = messageService.updatedMessage(modifiedMessage);
         return ResponseEntity.ok(updatedMessage);
 
     }

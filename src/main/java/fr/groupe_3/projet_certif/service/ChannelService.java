@@ -58,7 +58,7 @@ public class ChannelService {
     /**
      * Update a channel
      * 
-     * @param channelName
+     *
      * @param channel
      * @return
      */

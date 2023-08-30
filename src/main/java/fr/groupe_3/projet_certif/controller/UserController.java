@@ -113,7 +113,8 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
 
-        // si le nom en url renvoie vers une entrée en BB dont l'id est différent de celui dans le corps de la requête,
+        // si le nom en url renvoie vers une entrée en BB dont l'id est différent de
+        // celui dans le corps de la requête,
         // renvoie une erreur "Bad Request"
         if (!userToPut.get().getUserId().equals(modifiedUser.getUserId())) {
             return ResponseEntity.badRequest().build();
@@ -121,7 +122,7 @@ public class UserController {
 
         // si le nom en url existe en BDD et correspond à celui renvoyé par le corps de
         // la requête, l'utilisateur est modifié
-        User updatedUser = userService.updateUser(userName, modifiedUser);
+        User updatedUser = userService.updateUser(modifiedUser);
         return ResponseEntity.ok(updatedUser);
 
     }
