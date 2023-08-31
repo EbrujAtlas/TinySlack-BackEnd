@@ -41,7 +41,7 @@ public class MessageController {
 
         // si l'id en url ne correspond à aucun message, renvoie une erreur "Not Found"
         if (message.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().header("Erreur", "Aucun message trouvé").build();
         }
 
         // si l'id en url correspond à un message existant, affiche ce message
@@ -56,10 +56,10 @@ public class MessageController {
      * @return
      */
     @PostMapping("messages")
-    public ResponseEntity<Message> saveMessage(@RequestBody Message newMessage) {
+    public ResponseEntity<String> saveMessage(@RequestBody Message newMessage) {
 
-        Message messageToCreate = messageService.addMessage(newMessage);
-        return ResponseEntity.ok(messageToCreate);
+        messageService.addMessage(newMessage);
+        return ResponseEntity.ok("Le message a bien été créé");
 
     }
 
@@ -76,7 +76,7 @@ public class MessageController {
 
         // si le message n'existe pas, renvoie une erreur "Not Found"
         if (messageToDelete.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().header("Erreur", "Aucun message trouvé").build();
         }
 
         // si le message existe, supprime le message
@@ -89,29 +89,30 @@ public class MessageController {
      * PUT sur l'url "tinyslack/messages/{id}" pour modifier un message existant
      * 
      * @param messageId
-     * @param modifiedMessage
+     * @param modification
      * @return
      */
     @PutMapping("messages/{id}")
     public ResponseEntity<Message> putMessage(@PathVariable("id") UUID messageId,
-            @RequestBody Message modifiedMessage) {
+            @RequestBody Message modification) {
 
         Optional<Message> messageToPut = messageService.getOneMessageById(messageId);
 
         // si le message n'existe pas, renvoie une erreur "Not Found"
         if (messageToPut.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().header("Erreur", "Aucun message trouvé").build();
         }
 
         // si l'id en url et l'id renvoyé par le corps de la requête ne sont pas
         // identiques, renvoie une erreur "Bad Request"
-        if (!messageId.equals(modifiedMessage.getMessageId())) {
-            return ResponseEntity.badRequest().build();
+        if (!messageId.equals(modification.getMessageId())) {
+            return ResponseEntity.badRequest()
+                    .header("Erreur", "Ce message ne correspond pas à la modification demandée").build();
         }
 
         // si l'id en url existe en BDD et correspond à celui renvoyé par le corps de la
         // requête, le message est modifié
-        Message updatedMessage = messageService.updatedMessage(modifiedMessage);
+        Message updatedMessage = messageService.updatedMessage(modification);
         return ResponseEntity.ok(updatedMessage);
 
     }
@@ -120,29 +121,30 @@ public class MessageController {
      * PATCH sur l'url "tinyslack/messages/{id}" pour modifier un message existant
      * 
      * @param messageId
-     * @param patchedMessage
+     * @param patch
      * @return
      */
     @PatchMapping("messages/{id}")
     public ResponseEntity<Object> patchMessage(@PathVariable("id") UUID messageId,
-            @RequestBody Message patchedMessage) {
+            @RequestBody Message patch) {
 
         Optional<Message> messageToPatch = messageService.getOneMessageById(messageId);
 
         // si le message n'existe pas, renvoie une erreur "Not Found"
         if (messageToPatch.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().header("Erreur", "Aucun message trouvé").build();
         }
 
         // si l'id en url et l'id renvoyé par le corps de la requête ne sont pas
         // identiques, renvoie une erreur "Bad Request"
-        if (!messageId.equals(patchedMessage.getMessageId())) {
-            return ResponseEntity.badRequest().build();
+        if (!messageId.equals(patch.getMessageId())) {
+            return ResponseEntity.badRequest()
+                    .header("Erreur", "Ce message ne correspond pas à la modification demandée").build();
         }
 
         // si l'id en url existe en BDD et correspond à celui renvoyé par le corps de la
         // requête, le message est modifié
-        messageService.patchMessage(messageId, patchedMessage);
+        messageService.patchMessage(messageId, patch);
         return ResponseEntity.ok(messageToPatch);
 
     }

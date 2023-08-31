@@ -2,6 +2,7 @@ package fr.groupe_3.projet_certif.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +55,7 @@ public class ChannelController {
      * @return
      */
     @PostMapping("channels")
-    public ResponseEntity<Object> saveChannel(@RequestBody Channel newChannel) {
+    public ResponseEntity<String> saveChannel(@RequestBody Channel newChannel) {
 
         Optional<Channel> channelToPost = channelService.getOneChannelByName(newChannel.getChannelName());
 
@@ -66,8 +67,8 @@ public class ChannelController {
 
         // si le nom dans le corps de la requête ne correspond à aucun canal existant,
         // ajoute le nouveau canal
-        Channel channelToCreate = channelService.addChannel(newChannel);
-        return ResponseEntity.ok(channelToCreate);
+        channelService.addChannel(newChannel);
+        return ResponseEntity.ok("Le canal a bien été créé");
 
     }
 
@@ -102,23 +103,28 @@ public class ChannelController {
      * PUT sur l'url "tinyslack/channels/{name}" pour modifier un canal existant
      * 
      * @param channelName
-     * @param modifiedChannel
+     * @param modification
      * @return
      */
     @PutMapping("channels/{name}")
     public ResponseEntity<Object> putChannel(@PathVariable("name") String channelName,
-            @RequestBody Channel modifiedChannel) {
+            @RequestBody Channel modification) {
 
+        // pour récupérer le canal qui correspond au "name" en URL
         Optional<Channel> channelToPut = channelService.getOneChannelByName(channelName);
+
+        // à partir du "name" en URL, on récupère l'ID du canal correspondant
+        UUID channelId = channelToPut.get().getChannelId();
 
         // si le canal n'existe pas, renvoie une erreur "Not Found"
         if (channelToPut.isEmpty()) {
             return ResponseEntity.notFound().header("Erreur", "Aucun canal trouvé").build();
         }
 
-        // si le nom en url et le nom renvoyé par le corps de la requête ne sont pas
+        // si l'id du canal dont le nom est dans l'url et l'id' renvoyé par le corps de
+        // la requête ne sont pas
         // identiques, renvoie une erreur "Bad Request"
-        if (!channelName.equals(modifiedChannel.getChannelName())) {
+        if (!channelId.equals(modification.getChannelId())) {
             return ResponseEntity.badRequest().header("Erreur", "Ce canal ne correspond pas à la modification demandée")
                     .build();
         }
@@ -131,7 +137,7 @@ public class ChannelController {
 
         // si le canal existe, que le nom en url et en corps de la requête
         // correspondent; et que le canal n'est pas vérouillé, celui-ci est modifié
-        Channel updatedChannel = channelService.updatedChannel(modifiedChannel);
+        Channel updatedChannel = channelService.updatedChannel(modification);
         return ResponseEntity.ok(updatedChannel);
 
     }

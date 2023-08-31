@@ -71,6 +71,19 @@ public class MessageService {
      * @param messageId
      * @param messagePatch
      */
+    // public void patchMessage(UUID messageId, Message messagePatch) {
+
+    // Optional<Message> optional = messageRepository.findById(messageId);
+
+    // if (optional.isPresent()) {
+
+    // Message message = optional.get();
+    // message.updateNotNull(messagePatch);
+    // messageRepository.save(message);
+
+    // }
+    // }
+
     public void patchMessage(UUID messageId, Message messagePatch) {
 
         Optional<Message> optional = messageRepository.findById(messageId);

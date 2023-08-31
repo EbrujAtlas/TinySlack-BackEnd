@@ -58,7 +58,7 @@ public class UserController {
      * @return
      */
     @PostMapping("users")
-    public ResponseEntity<User> saveUser(@RequestBody User newUser) {
+    public ResponseEntity<String> saveUser(@RequestBody User newUser) {
 
         // si le nom dans le corps de la requête correspond à un utilisteur existant,
         // renvoie une erreur "Bad Request"
@@ -68,8 +68,8 @@ public class UserController {
 
         // si le nom dans le corps de la requête ne correspond à aucun utilisateur
         // existant, ajoute le nouvel utilisateur
-        User userToCreate = userService.addUser(newUser);
-        return ResponseEntity.ok(userToCreate);
+        userService.addUser(newUser);
+        return ResponseEntity.ok("L'utilisateur a bien été créé");
 
     }
 
