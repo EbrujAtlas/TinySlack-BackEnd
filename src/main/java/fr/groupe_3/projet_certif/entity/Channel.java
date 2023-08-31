@@ -22,12 +22,10 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "channels")
 public class Channel {
-
     // Attributs
     @Id
     @GeneratedValue
     @UuidGenerator(style = Style.AUTO)
-
     private UUID channelId;
 
     private String channelName;
@@ -122,7 +120,7 @@ public class Channel {
         this.locked = locked;
     }
 
-    // To string
+    // To string// pour permettre à l'affichage d'avoir les valeurs en string
     @Override
     public String toString() {
         return "Channel [channelId=" + channelId + ", channelName=" + channelName + ", channelDescription="
@@ -131,6 +129,7 @@ public class Channel {
 
     /**
      * Méthode updateNotNull pour le PATCH
+     * 
      * 
      * @param channelPatch
      */
@@ -146,10 +145,10 @@ public class Channel {
             this.setChannelDescription(channelPatch.getChannelDescription());
         }
 
-        // user
-        if (channelPatch.getUser() != null) {
-            this.setUser(channelPatch.getUser());
-        }
+        // // user
+        // if (channelPatch.getUser() != null) {
+        // this.setUser(channelPatch.getUser());
+        // }
 
         // locked
         if (channelPatch.getLocked() != null) {

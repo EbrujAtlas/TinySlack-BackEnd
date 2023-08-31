@@ -57,11 +57,11 @@ public class MessageService {
     /**
      * Update a message
      * 
-     * @param messageId
+     * 
      * @param message
      * @return
      */
-    public Message updatedMessage(UUID messageId, Message message) {
+    public Message updatedMessage(Message message) {
         return messageRepository.save(message);
     }
 
