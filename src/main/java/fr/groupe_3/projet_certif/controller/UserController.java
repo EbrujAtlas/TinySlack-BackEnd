@@ -11,6 +11,8 @@ import fr.groupe_3.projet_certif.entity.User;
 import fr.groupe_3.projet_certif.service.UserService;
 
 @RestController
+//Permet de gérer le CORS
+@CrossOrigin(origins = "*")
 @RequestMapping("tinyslack")
 public class UserController {
 
