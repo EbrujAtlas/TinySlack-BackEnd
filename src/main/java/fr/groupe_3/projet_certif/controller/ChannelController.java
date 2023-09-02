@@ -2,20 +2,27 @@ package fr.groupe_3.projet_certif.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import fr.groupe_3.projet_certif.entity.Channel;
+import fr.groupe_3.projet_certif.entity.Message;
 import fr.groupe_3.projet_certif.service.ChannelService;
+import fr.groupe_3.projet_certif.service.MessageService;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("tinyslack")
 public class ChannelController {
 
     @Autowired
     ChannelService channelService;
+
+    @Autowired
+    MessageService messageService;
 
     /**
      * GET sur l'url "tinyslack/channels" pour récupérer la liste de tous les canaux
@@ -45,6 +52,29 @@ public class ChannelController {
         // si le nom en url correspond à un canal existant, affiche ce canal
         Channel channelToGet = channel.get();
         return ResponseEntity.ok(channelToGet);
+    }
+
+    /**
+     * GET sur l'url "tinyslack/channels/{name}/messages" pour récupérer un canal par son nom
+     * 
+     * @param channelName
+     * @return
+     */
+    @GetMapping("channels/{name}/messages")
+    public ResponseEntity<List<Message>> getMessageByChannelByName(@PathVariable("name") String channelName) {
+        Optional<Channel> channel = channelService.getOneChannelByName(channelName);
+
+        // si le nom en url ne correspond à aucun canal, renvoie une erreur "Not Found"
+        if (channel.isEmpty()) {
+            return ResponseEntity.notFound().header("Erreur", "Aucun canal trouvé").build();
+        }
+
+        // si le nom en url correspond à un canal existant, affiche ce canal
+        Channel channelToGet = channel.get();
+        List<Message> messagesFromChannel = messageService.getAllMessages().stream()
+                .filter(x -> x.getChannel().getChannelId() == channelToGet.getChannelId())
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(messagesFromChannel);
     }
 
     /**
