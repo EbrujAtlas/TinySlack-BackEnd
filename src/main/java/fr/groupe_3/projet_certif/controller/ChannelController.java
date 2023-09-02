@@ -12,6 +12,8 @@ import fr.groupe_3.projet_certif.entity.Channel;
 import fr.groupe_3.projet_certif.service.ChannelService;
 
 @RestController
+//Permet de gérer les erreurs de CORS
+@CrossOrigin
 @RequestMapping("tinyslack")
 public class ChannelController {
 
@@ -100,21 +102,21 @@ public class ChannelController {
     }
 
     /**
-     * PUT sur l'url "tinyslack/channels/{name}" pour modifier un canal existant
+     * PUT sur l'url "tinyslack/channels/{id}" pour modifier un canal existant
      * 
-     * @param channelName
+     * @param channelId
      * @param modification
      * @return
      */
-    @PutMapping("channels/{name}")
-    public ResponseEntity<Object> putChannel(@PathVariable("name") String channelName,
+    @PutMapping("channels/{id}")
+    public ResponseEntity<Object> putChannel(@PathVariable("id") UUID channelId,
             @RequestBody Channel modification) {
 
         // pour récupérer le canal qui correspond au "name" en URL
-        Optional<Channel> channelToPut = channelService.getOneChannelByName(channelName);
+        Optional<Channel> channelToPut = channelService.getOneChannelById(channelId);
 
         // à partir du "name" en URL, on récupère l'ID du canal correspondant
-        UUID channelId = channelToPut.get().getChannelId();
+       // UUID channelId = channelToPut.get().getChannelId();
 
         // si le canal n'existe pas, renvoie une erreur "Not Found"
         if (channelToPut.isEmpty()) {
@@ -136,24 +138,24 @@ public class ChannelController {
         }
 
         // si le canal existe, que le nom en url et en corps de la requête
-        // correspondent; et que le canal n'est pas vérouillé, celui-ci est modifié
+        // correspondent; et que le canal n'est pas vérrouillé, celui-ci est modifié
         Channel updatedChannel = channelService.updatedChannel(modification);
         return ResponseEntity.ok(updatedChannel);
 
     }
 
     /**
-     * PATCH sur l'url "tinyslack/channels/{name}" pour modifier un canal existant
+     * PATCH sur l'url "tinyslack/channels/{id}" pour modifier un canal existant
      * 
-     * @param channelName
+     * @param channelId
      * @param patch
      * @return
      */
-    @PatchMapping("channels/{name}")
-    public ResponseEntity<Object> patchChannel(@PathVariable("name") String channelName,
+    @PatchMapping("channels/{id}")
+    public ResponseEntity<Object> patchChannel(@PathVariable("id") UUID channelId,
             @RequestBody Channel patch) {
 
-        Optional<Channel> channelToPatch = channelService.getOneChannelByName(channelName);
+        Optional<Channel> channelToPatch = channelService.getOneChannelById(channelId);
 
         // si le canal n'existe pas, renvoie une erreur "Not Found"
         if (channelToPatch.isEmpty()) {
@@ -162,10 +164,10 @@ public class ChannelController {
 
         // si le nom en url et le nom renvoyé par le corps de la requête ne sont pas
         // identiques, renvoie une erreur "Bad Request"
-        if (!channelName.equals(patch.getChannelName())) {
-            return ResponseEntity.badRequest().header("Erreur", "Ce canal ne correspond pas à la modification demandée")
-                    .build();
-        }
+        // if (!channelId.equals(patch.getChannelId())) {
+        //     return ResponseEntity.badRequest().header("Erreur", "Ce canal ne correspond pas à la modification demandée")
+        //             .build();
+        // }
 
         // si le canal est vérouillé, renvoie une erreur "Bad Request"
         if (channelToPatch.get().getLocked() == 1) {
@@ -173,7 +175,7 @@ public class ChannelController {
                     .build();
         }
 
-        channelService.patchChannel(channelName, patch);
+        channelService.patchChannel(channelId, patch);
         return ResponseEntity.ok(channelToPatch);
 
         // channelToPatch = channelService.getOneChannelByName(channelName);

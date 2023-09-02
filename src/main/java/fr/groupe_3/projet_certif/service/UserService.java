@@ -2,6 +2,7 @@ package fr.groupe_3.projet_certif.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,16 @@ public class UserService {
     }
 
     /**
+     * Get one by name
+     * 
+     * @param userId
+     * @return
+     */
+    public Optional<User> getUserByUserId(UUID userId) {
+        return userRepository.findById(userId);
+    }
+
+     /**
      * Get one by name
      * 
      * @param userName
@@ -69,12 +80,12 @@ public class UserService {
     /**
      * Patch an user
      * 
-     * @param userName
+     * @param userId
      * @param patchUser
      */
-    public void patchUser(String userName, User patchUser) {
+    public void patchUser(UUID userId, User patchUser) {
 
-        Optional<User> optional = userRepository.findByUserName(userName);
+        Optional<User> optional = userRepository.findById(userId);
 
         if (optional.isPresent()) {
 

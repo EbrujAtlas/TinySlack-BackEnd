@@ -2,6 +2,7 @@ package fr.groupe_3.projet_certif.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,15 @@ public class ChannelService {
      */
     public Optional<Channel> getOneChannelByName(String channelName) {
         return channelRepository.findByChannelName(channelName);
+    }
+     /**
+     * Get one channel by Id
+     * 
+     * @param channelId
+     * @return
+     */
+    public Optional<Channel> getOneChannelById(UUID channelId) {
+        return channelRepository.findById(channelId);
     }
 
     /**
@@ -69,12 +79,12 @@ public class ChannelService {
     /**
      * Patch a channel
      * 
-     * @param channelName
+     * @param channelId
      * @param channelPatch
      */
-    public void patchChannel(String channelName, Channel channelPatch) {
+    public void patchChannel(UUID channelId, Channel channelPatch) {
 
-        Optional<Channel> optional = channelRepository.findByChannelName(channelName);
+        Optional<Channel> optional = channelRepository.findById(channelId);
 
         if (optional.isPresent()) {
 

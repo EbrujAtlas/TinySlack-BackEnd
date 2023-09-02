@@ -2,6 +2,7 @@ package fr.groupe_3.projet_certif.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,8 @@ import fr.groupe_3.projet_certif.entity.User;
 import fr.groupe_3.projet_certif.service.UserService;
 
 @RestController
+//Permet de gérer les erreurs de CORS
+@CrossOrigin
 @RequestMapping("tinyslack")
 public class UserController {
 
@@ -97,16 +100,16 @@ public class UserController {
     }
 
     /**
-     * PUT sur l'url "tinyslack/users/{name}" pour modifier un utilisateur existant
+     * PUT sur l'url "tinyslack/users/{id}" pour modifier un utilisateur existant
      * 
-     * @param userName
+     * @param userId
      * @param modifiedUser
      * @return
      */
-    @PutMapping("users/{name}")
-    public ResponseEntity<User> putUser(@PathVariable("name") String userName, @RequestBody User modifiedUser) {
+    @PutMapping("users/{id}")
+    public ResponseEntity<User> putUser(@PathVariable("id") UUID userId, @RequestBody User modifiedUser) {
 
-        Optional<User> userToPut = userService.getUserByUserName(userName);
+        Optional<User> userToPut = userService.getUserByUserId(userId);
 
         // si l'utilisateur n'existe pas, renvoie une erreur "Not Found"
         if (userToPut.isEmpty()) {
@@ -128,18 +131,18 @@ public class UserController {
     }
 
     /**
-     * PATCH sur l'url "tinyslack/users/{name}" pour modifier un utilisateur
+     * PATCH sur l'url "tinyslack/users/{id}" pour modifier un utilisateur
      * existant
      * 
-     * @param userName
+     * @param userId
      * @param patchedUser
      * @return
      */
-    @PatchMapping("users/{name}")
-    public ResponseEntity<Optional<User>> patchUser(@PathVariable("name") String userName,
+    @PatchMapping("users/{id}")
+    public ResponseEntity<Optional<User>> patchUser(@PathVariable("id") UUID userId,
             @RequestBody User patchedUser) {
 
-        Optional<User> userToPatch = userService.getUserByUserName(userName);
+        Optional<User> userToPatch = userService.getUserByUserId(userId);
 
         // si l'utilisateur n'existe pas, renvoie une erreur "Not Found"
         if (userToPatch.isEmpty()) {
@@ -148,13 +151,13 @@ public class UserController {
 
         // si le nom en url et le nom renvoyé par le corps de la requête ne sont pas
         // identiques, renvoie une erreur "Bad Request"
-        if (!userName.equals(patchedUser.getUserName())) {
-            return ResponseEntity.badRequest().build();
-        }
+       // if (!userId.equals(patchedUser.getUserId())) {
+       //     return ResponseEntity.badRequest().build();
+       // }
 
-        // si le nom en url existe en BDD et correspond à celui renvoyé par le corps de
+        // si le id en url existe en BDD et correspond à celui renvoyé par le corps de
         // la requête, l'utilisateur est modifié
-        userService.patchUser(userName, patchedUser);
+        userService.patchUser(userId, patchedUser);
         return ResponseEntity.ok(userToPatch);
 
     }
