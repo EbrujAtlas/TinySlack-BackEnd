@@ -64,7 +64,7 @@ public class ChannelController {
      * @return
      */
     @GetMapping("channels/{name}/messages")
-    public ResponseEntity<List<Message>> getMessageByChannelByName(@PathVariable("name") String channelName) {
+    public ResponseEntity<List<Message>> getMessagesByChannelName(@PathVariable("name") String channelName) {
         Optional<Channel> channel = channelService.getOneChannelByName(channelName);
 
         // si le nom en url ne correspond à aucun canal, renvoie une erreur "Not Found"
@@ -72,7 +72,7 @@ public class ChannelController {
             return ResponseEntity.notFound().header("Erreur", "Aucun canal trouvé").build();
         }
 
-        // si le nom en url correspond à un canal existant, affiche ce canal
+        // on récupère le canal dont le nom est en url, puis on récupère la liste des messages correspondants à ce canal
         Channel channelToGet = channel.get();
         List<Message> messagesFromChannel = messageService.getAllMessages().stream()
                 .filter(x -> x.getChannel().getChannelId() == channelToGet.getChannelId())
