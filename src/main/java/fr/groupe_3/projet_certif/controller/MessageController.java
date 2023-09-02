@@ -12,6 +12,8 @@ import fr.groupe_3.projet_certif.entity.Message;
 import fr.groupe_3.projet_certif.service.MessageService;
 
 @RestController
+//Permet de gérer le CORS
+@CrossOrigin(origins = "*")
 @RequestMapping("tinyslack")
 public class MessageController {
 
