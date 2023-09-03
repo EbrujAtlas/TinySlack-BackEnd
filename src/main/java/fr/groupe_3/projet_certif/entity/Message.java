@@ -1,13 +1,15 @@
 package fr.groupe_3.projet_certif.entity;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.annotations.UuidGenerator.Style;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -19,38 +21,39 @@ public class Message {
 
     // Attributs
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long messageId;
+    @GeneratedValue
+    @UuidGenerator(style = Style.AUTO)
+    private UUID messageId;
 
     @Column(name = "message")
     private String messageContent;
 
-    @Column(name = "message_date")
     // ajout de l'heure de création automatiquement
     @CreationTimestamp
     private LocalDateTime messageDate;
 
-    @Column(name = "user_name")
-    private String userName;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "channel_id")
     private Channel channel;
 
-    // Constructeurs
-    public Message(String messageContent, LocalDateTime messageDate, String userName, Channel channel) {
-        this.messageContent = messageContent;
-        this.messageDate = messageDate;
-        this.userName = userName;
-        this.channel = channel;
-    }
-
     // Constructeur vide
     public Message() {
     }
 
+    // Constructeur avec arguments
+    public Message(String messageContent, LocalDateTime messageDate, User user, Channel channel) {
+        this.messageContent = messageContent;
+        this.messageDate = messageDate;
+        this.user = user;
+        this.channel = channel;
+    }
+
     // Getters
-    public Long getMessageId() {
+    public UUID getMessageId() {
         return messageId;
     }
 
@@ -62,8 +65,8 @@ public class Message {
         return messageDate;
     }
 
-    public String getUserName() {
-        return userName;
+    public User getUser() {
+        return user;
     }
 
     public Channel getChannel() {
@@ -71,7 +74,7 @@ public class Message {
     }
 
     // Setters
-    public void setMessageId(Long messageId) {
+    public void setMessageId(UUID messageId) {
         this.messageId = messageId;
     }
 
@@ -83,8 +86,8 @@ public class Message {
         this.messageDate = messageDate;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setChannel(Channel channel) {
@@ -95,11 +98,14 @@ public class Message {
     @Override
     public String toString() {
         return "Message [messageId=" + messageId + ", messageContent=" + messageContent + ", messageDate=" + messageDate
-                + ", userName=" + userName + ", channel=" + channel + "]";
+                + ", user=" + user + ", channel=" + channel + "]";
     }
 
-    // Méthode updateNotNull pour le PATCH
-
+    /**
+     * Méthode updateNotNull pour le PATCH
+     * 
+     * @param messagePatch
+     */
     public void updateNotNull(Message messagePatch) {
 
         // messageContent
@@ -112,9 +118,9 @@ public class Message {
             this.setMessageDate(messagePatch.getMessageDate());
         }
 
-        // userName
-        if (messagePatch.getUserName() != null) {
-            this.setUserName(messagePatch.getUserName());
+        // user
+        if (messagePatch.getUser() != null) {
+            this.setUser(messagePatch.getUser());
         }
 
         // channel

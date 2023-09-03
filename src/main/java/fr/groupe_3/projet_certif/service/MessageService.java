@@ -2,6 +2,7 @@ package fr.groupe_3.projet_certif.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,49 +16,68 @@ public class MessageService {
     @Autowired
     MessageRepository messageRepository;
 
-    // Get all
+    /**
+     * Get all messages
+     * 
+     * @return
+     */
     public List<Message> getAllMessages() {
         return messageRepository.findAll();
     }
 
     /**
+     * Get one By Id
      * 
      * @param messageId
      * @return
      */
-    // Get one
-    public Optional<Message> getOneMessageById(Long messageId) {
+    public Optional<Message> getOneMessageById(UUID messageId) {
         return messageRepository.findById(messageId);
     }
 
     /**
+     * Delete one by Id
      * 
      * @param messageId
      */
-    // Delete one
-    public void deleteById(Long messageId) {
+    public void deleteById(UUID messageId) {
         messageRepository.deleteById(messageId);
     }
 
-    // Post one
+    /**
+     * Create a new message
+     * 
+     * @param message
+     * @return
+     */
     public Message addMessage(Message message) {
         return messageRepository.save(message);
     }
 
-    // Put
-    public void updatedMessage(Long messageId, Message message) {
-        messageRepository.save(message);
+    /**
+     * Update a message
+     * 
+     * 
+     * @param message
+     * @return
+     */
+    public Message updatedMessage(Message message) {
+        return messageRepository.save(message);
     }
 
-    // Patch
-    public void patchMessage(Long messageId, Message messagePatch) {
+    /**
+     * Patch a message
+     * 
+     * @param messageId
+     * @param messagePatch
+     */
+    public void patchMessage(UUID messageId, Message messagePatch) {
 
         Optional<Message> optional = messageRepository.findById(messageId);
 
         if (optional.isPresent()) {
 
             Message message = optional.get();
-            System.out.println(message);
             message.updateNotNull(messagePatch);
             messageRepository.save(message);
 
