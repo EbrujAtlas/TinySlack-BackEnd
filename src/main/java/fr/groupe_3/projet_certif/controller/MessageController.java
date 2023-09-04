@@ -12,6 +12,8 @@ import fr.groupe_3.projet_certif.entity.Message;
 import fr.groupe_3.projet_certif.service.MessageService;
 
 @RestController
+// Permet de gérer le CORS
+@CrossOrigin(origins = "*")
 @RequestMapping("tinyslack")
 public class MessageController {
 
@@ -56,10 +58,10 @@ public class MessageController {
      * @return
      */
     @PostMapping("messages")
-    public ResponseEntity<Message> saveMessage(@RequestBody Message newMessage) {
+    public ResponseEntity<String> saveMessage(@RequestBody Message newMessage) {
 
-        Message messageToCreate = messageService.addMessage(newMessage);
-        return ResponseEntity.ok(messageToCreate);
+        messageService.addMessage(newMessage);
+        return ResponseEntity.ok("Le message a bien été créé");
 
     }
 
@@ -89,12 +91,12 @@ public class MessageController {
      * PUT sur l'url "tinyslack/messages/{id}" pour modifier un message existant
      * 
      * @param messageId
-     * @param modifiedMessage
+     * @param modification
      * @return
      */
     @PutMapping("messages/{id}")
-    public ResponseEntity<Message> putMessage(@PathVariable("id") UUID messageId,
-            @RequestBody Message modifiedMessage) {
+    public ResponseEntity<Object> putMessage(@PathVariable("id") UUID messageId,
+            @RequestBody Message modification) {
 
         Optional<Message> messageToPut = messageService.getOneMessageById(messageId);
 
@@ -105,13 +107,14 @@ public class MessageController {
 
         // si l'id en url et l'id renvoyé par le corps de la requête ne sont pas
         // identiques, renvoie une erreur "Bad Request"
-        if (!messageId.equals(modifiedMessage.getMessageId())) {
-            return ResponseEntity.badRequest().build();
+        if (!messageId.equals(modification.getMessageId())) {
+            return ResponseEntity.badRequest()
+                    .body("Ce message ne correspond pas à la modification demandée");
         }
 
         // si l'id en url existe en BDD et correspond à celui renvoyé par le corps de la
         // requête, le message est modifié
-        Message updatedMessage = messageService.updatedMessage(messageId, modifiedMessage);
+        Message updatedMessage = messageService.updatedMessage(modification);
         return ResponseEntity.ok(updatedMessage);
 
     }
@@ -120,12 +123,12 @@ public class MessageController {
      * PATCH sur l'url "tinyslack/messages/{id}" pour modifier un message existant
      * 
      * @param messageId
-     * @param patchedMessage
+     * @param patch
      * @return
      */
     @PatchMapping("messages/{id}")
     public ResponseEntity<Object> patchMessage(@PathVariable("id") UUID messageId,
-            @RequestBody Message patchedMessage) {
+            @RequestBody Message patch) {
 
         Optional<Message> messageToPatch = messageService.getOneMessageById(messageId);
 
@@ -136,13 +139,14 @@ public class MessageController {
 
         // si l'id en url et l'id renvoyé par le corps de la requête ne sont pas
         // identiques, renvoie une erreur "Bad Request"
-        if (!messageId.equals(patchedMessage.getMessageId())) {
-            return ResponseEntity.badRequest().build();
+        if (!messageId.equals(patch.getMessageId())) {
+            return ResponseEntity.badRequest()
+                    .body("Ce message ne correspond pas à la modification demandée");
         }
 
         // si l'id en url existe en BDD et correspond à celui renvoyé par le corps de la
         // requête, le message est modifié
-        messageService.patchMessage(messageId, patchedMessage);
+        messageService.patchMessage(messageId, patch);
         return ResponseEntity.ok(messageToPatch);
 
     }

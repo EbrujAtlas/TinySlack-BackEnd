@@ -58,11 +58,11 @@ public class UserService {
     /**
      * Update an user
      * 
-     * @param userName
+     * 
      * @param putUser
      * @return
      */
-    public User updateUser(String userName, User putUser) {
+    public User updateUser(User putUser) {
         return userRepository.save(putUser);
     }
 

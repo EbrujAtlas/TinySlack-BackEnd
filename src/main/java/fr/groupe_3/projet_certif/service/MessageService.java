@@ -57,11 +57,11 @@ public class MessageService {
     /**
      * Update a message
      * 
-     * @param messageId
+     * 
      * @param message
      * @return
      */
-    public Message updatedMessage(UUID messageId, Message message) {
+    public Message updatedMessage(Message message) {
         return messageRepository.save(message);
     }
 
@@ -71,6 +71,19 @@ public class MessageService {
      * @param messageId
      * @param messagePatch
      */
+    // public void patchMessage(UUID messageId, Message messagePatch) {
+
+    // Optional<Message> optional = messageRepository.findById(messageId);
+
+    // if (optional.isPresent()) {
+
+    // Message message = optional.get();
+    // message.updateNotNull(messagePatch);
+    // messageRepository.save(message);
+
+    // }
+    // }
+
     public void patchMessage(UUID messageId, Message messagePatch) {
 
         Optional<Message> optional = messageRepository.findById(messageId);

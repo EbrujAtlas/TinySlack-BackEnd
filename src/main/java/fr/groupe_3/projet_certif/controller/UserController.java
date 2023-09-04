@@ -11,6 +11,8 @@ import fr.groupe_3.projet_certif.entity.User;
 import fr.groupe_3.projet_certif.service.UserService;
 
 @RestController
+// Permet de gérer le CORS
+@CrossOrigin(origins = "*")
 @RequestMapping("tinyslack")
 public class UserController {
 
@@ -58,12 +60,12 @@ public class UserController {
      * @return
      */
     @PostMapping("users")
-    public ResponseEntity<User> saveUser(@RequestBody User newUser) {
+    public ResponseEntity<Object> saveUser(@RequestBody User newUser) {
 
         // si le nom dans le corps de la requête correspond à un utilisteur existant,
         // renvoie une erreur "Bad Request"
         if (userService.getUserByUserName(newUser.getUserName()).isPresent()) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("l'utilisateur existe déjà");
         }
 
         // si le nom dans le corps de la requête ne correspond à aucun utilisateur
@@ -81,7 +83,7 @@ public class UserController {
      * @return
      */
     @DeleteMapping("users/{name}")
-    public ResponseEntity<String> deleteUser(@PathVariable("name") String userName) {
+    public ResponseEntity<User> deleteUser(@PathVariable("name") String userName) {
 
         Optional<User> userToDelete = userService.getUserByUserName(userName);
 
@@ -92,7 +94,7 @@ public class UserController {
 
         // si l'utilisateur existe, supprime l'utilisateur
         userService.deleteByUserName(userName);
-        return ResponseEntity.ok("L'utilisateur a bien été supprimé");
+        return ResponseEntity.ok().build();
 
     }
 
@@ -113,16 +115,15 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
 
-        // si le nom en url renvoie vers une entrée en BB dont l'id est différent de
-        // celui dans le corps de la requête,
-        // renvoie une erreur "Bad Request"
+        // si le nom en url renvoie vers une entrée en BDD dont l'id est différent de
+        // celui dans le corps de la requête,renvoie une erreur "Bad Request"
+
         if (!userToPut.get().getUserId().equals(modifiedUser.getUserId())) {
             return ResponseEntity.badRequest().build();
         }
 
-        // si le nom en url existe en BDD et correspond à celui renvoyé par le corps de
-        // la requête, l'utilisateur est modifié
-        User updatedUser = userService.updateUser(userName, modifiedUser);
+        // L'utilisateur est modifié
+        User updatedUser = userService.updateUser(modifiedUser);
         return ResponseEntity.ok(updatedUser);
 
     }
@@ -145,16 +146,14 @@ public class UserController {
         if (userToPatch.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-
-        // si le nom en url et le nom renvoyé par le corps de la requête ne sont pas
-        // identiques, renvoie une erreur "Bad Request"
+        // si le nom en url renvoie vers une entrée en BDD dont l'id est différent de
+        // celui dans le corps de la requête,renvoie une erreur "Bad Request"
         if (!userToPatch.get().getUserId().equals(patchedUser.getUserId())) {
 
             return ResponseEntity.badRequest().build();
         }
 
-        // si le nom en url existe en BDD et correspond à celui renvoyé par le corps de
-        // la requête, l'utilisateur est modifié
+        // L''utilisateur est modifié
         userService.patchUser(userName, patchedUser);
         return ResponseEntity.ok(userToPatch);
 
