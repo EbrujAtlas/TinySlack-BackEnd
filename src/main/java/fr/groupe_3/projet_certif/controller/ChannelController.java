@@ -196,9 +196,9 @@ public class ChannelController {
             return ResponseEntity.notFound().build();
         }
 
-        // si le nom en url et le nom renvoyé par le corps de la requête ne sont pas
-        // identiques, renvoie une erreur "Bad Request"
-        if (!channelName.equals(patch.getChannelName())) {
+        // si l'id du canal dont le nom est dans l'url et l'id' renvoyé par le corps de
+        // la requête ne sont pas identiques, renvoie une erreur "Bad Request"
+        if (!channelToPatch.get().getChannelId().equals(patch.getChannelId())) {
             return ResponseEntity.badRequest().body("Ce canal ne correspond pas à la modification demadnée");
 
         }
