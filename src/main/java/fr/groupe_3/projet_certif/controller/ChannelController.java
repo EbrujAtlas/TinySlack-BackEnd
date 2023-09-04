@@ -100,9 +100,10 @@ public class ChannelController {
 
         // si le nom dans le corps de la requête ne correspond à aucun canal existant,
         // ajoute le nouveau canal
-        Channel postChannel = channelToPost.get();
-        channelService.addChannel(postChannel);
-        return ResponseEntity.ok(postChannel);
+
+        channelService.addChannel(newChannel);
+
+        return ResponseEntity.ok(newChannel);
 
     }
 
