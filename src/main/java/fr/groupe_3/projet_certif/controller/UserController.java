@@ -60,7 +60,7 @@ public class UserController {
      * @return
      */
     @PostMapping("users")
-    public ResponseEntity<String> saveUser(@RequestBody User newUser) {
+    public ResponseEntity<Object> saveUser(@RequestBody User newUser) {
 
         // si le nom dans le corps de la requête correspond à un utilisteur existant,
         // renvoie une erreur "Bad Request"
@@ -70,8 +70,8 @@ public class UserController {
 
         // si le nom dans le corps de la requête ne correspond à aucun utilisateur
         // existant, ajoute le nouvel utilisateur
-        userService.addUser(newUser);
-        return ResponseEntity.ok("L'utilisateur a bien été créé");
+        User userToCreate = userService.addUser(newUser);
+        return ResponseEntity.ok(userToCreate);
 
     }
 
@@ -115,15 +115,13 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
 
-        // si le nom en url renvoie vers une entrée en BB dont l'id est différent de
-        // celui dans le corps de la requête,
-        // renvoie une erreur "Bad Request"
+        // si le nom en url renvoie vers une entrée en BDD dont l'id est différent de
+        // celui dans le corps de la requête,renvoie une erreur "Bad Request"
         if (!userToPut.get().getUserId().equals(modifiedUser.getUserId())) {
             return ResponseEntity.badRequest().build();
         }
 
-        // si le nom en url existe en BDD et correspond à celui renvoyé par le corps de
-        // la requête, l'utilisateur est modifié
+        // L'utilisateur est modifié
         User updatedUser = userService.updateUser(modifiedUser);
         return ResponseEntity.ok(updatedUser);
 
@@ -147,15 +145,14 @@ public class UserController {
         if (userToPatch.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+        // si le nom en url renvoie vers une entrée en BDD dont l'id est différent de
+        // celui dans le corps de la requête,renvoie une erreur "Bad Request"
+        if (!userToPatch.get().getUserId().equals(patchedUser.getUserId())) {
 
-        // si le nom en url et le nom renvoyé par le corps de la requête ne sont pas
-        // identiques, renvoie une erreur "Bad Request"
-        if (!userName.equals(patchedUser.getUserName())) {
             return ResponseEntity.badRequest().build();
         }
 
-        // si le nom en url existe en BDD et correspond à celui renvoyé par le corps de
-        // la requête, l'utilisateur est modifié
+        // L''utilisateur est modifié
         userService.patchUser(userName, patchedUser);
         return ResponseEntity.ok(userToPatch);
 
