@@ -2,6 +2,7 @@ package fr.groupe_3.projet_certif.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -136,11 +137,11 @@ public class UserController {
      * @param patchedUser
      * @return
      */
-    @PatchMapping("users/{name}")
-    public ResponseEntity<Optional<User>> patchUser(@PathVariable("name") String userName,
+    @PatchMapping("users/{id}")
+    public ResponseEntity<Optional<User>> patchUser(@PathVariable("id") UUID userId,
             @RequestBody User patchedUser) {
 
-        Optional<User> userToPatch = userService.getUserByUserName(userName);
+        Optional<User> userToPatch = userService.getUserByUserId(userId);
 
         // si l'utilisateur n'existe pas, renvoie une erreur "Not Found"
         if (userToPatch.isEmpty()) {
@@ -154,7 +155,7 @@ public class UserController {
         }
 
         // L''utilisateur est modifié
-        userService.patchUser(userName, patchedUser);
+        userService.patchUser(userId, patchedUser);
         return ResponseEntity.ok(userToPatch);
 
     }
