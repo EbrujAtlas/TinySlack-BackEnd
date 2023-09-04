@@ -12,7 +12,7 @@ import fr.groupe_3.projet_certif.entity.Message;
 import fr.groupe_3.projet_certif.service.MessageService;
 
 @RestController
-//Permet de gérer le CORS
+// Permet de gérer le CORS
 @CrossOrigin(origins = "*")
 @RequestMapping("tinyslack")
 public class MessageController {
@@ -43,7 +43,7 @@ public class MessageController {
 
         // si l'id en url ne correspond à aucun message, renvoie une erreur "Not Found"
         if (message.isEmpty()) {
-            return ResponseEntity.notFound().header("Erreur", "Aucun message trouvé").build();
+            return ResponseEntity.notFound().build();
         }
 
         // si l'id en url correspond à un message existant, affiche ce message
@@ -78,7 +78,7 @@ public class MessageController {
 
         // si le message n'existe pas, renvoie une erreur "Not Found"
         if (messageToDelete.isEmpty()) {
-            return ResponseEntity.notFound().header("Erreur", "Aucun message trouvé").build();
+            return ResponseEntity.notFound().build();
         }
 
         // si le message existe, supprime le message
@@ -95,21 +95,21 @@ public class MessageController {
      * @return
      */
     @PutMapping("messages/{id}")
-    public ResponseEntity<Message> putMessage(@PathVariable("id") UUID messageId,
+    public ResponseEntity<Object> putMessage(@PathVariable("id") UUID messageId,
             @RequestBody Message modification) {
 
         Optional<Message> messageToPut = messageService.getOneMessageById(messageId);
 
         // si le message n'existe pas, renvoie une erreur "Not Found"
         if (messageToPut.isEmpty()) {
-            return ResponseEntity.notFound().header("Erreur", "Aucun message trouvé").build();
+            return ResponseEntity.notFound().build();
         }
 
         // si l'id en url et l'id renvoyé par le corps de la requête ne sont pas
         // identiques, renvoie une erreur "Bad Request"
         if (!messageId.equals(modification.getMessageId())) {
             return ResponseEntity.badRequest()
-                    .header("Erreur", "Ce message ne correspond pas à la modification demandée").build();
+                    .body("Ce message ne correspond pas à la modification demandée");
         }
 
         // si l'id en url existe en BDD et correspond à celui renvoyé par le corps de la
@@ -134,14 +134,14 @@ public class MessageController {
 
         // si le message n'existe pas, renvoie une erreur "Not Found"
         if (messageToPatch.isEmpty()) {
-            return ResponseEntity.notFound().header("Erreur", "Aucun message trouvé").build();
+            return ResponseEntity.notFound().build();
         }
 
         // si l'id en url et l'id renvoyé par le corps de la requête ne sont pas
         // identiques, renvoie une erreur "Bad Request"
         if (!messageId.equals(patch.getMessageId())) {
             return ResponseEntity.badRequest()
-                    .header("Erreur", "Ce message ne correspond pas à la modification demandée").build();
+                    .body("Ce message ne correspond pas à la modification demandée");
         }
 
         // si l'id en url existe en BDD et correspond à celui renvoyé par le corps de la

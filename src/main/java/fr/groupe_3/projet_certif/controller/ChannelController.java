@@ -48,7 +48,7 @@ public class ChannelController {
 
         // si le nom en url ne correspond à aucun canal, renvoie une erreur "Not Found"
         if (channel.isEmpty()) {
-            return ResponseEntity.notFound().header("Erreur", "Aucun canal trouvé").build();
+            return ResponseEntity.notFound().build();
         }
 
         // si le nom en url correspond à un canal existant, affiche ce canal
@@ -69,10 +69,11 @@ public class ChannelController {
 
         // si le nom en url ne correspond à aucun canal, renvoie une erreur "Not Found"
         if (channel.isEmpty()) {
-            return ResponseEntity.notFound().header("Erreur", "Aucun canal trouvé").build();
+            return ResponseEntity.notFound().build();
         }
 
-        // on récupère le canal dont le nom est en url, puis on récupère la liste des messages correspondants à ce canal
+        // on récupère le canal dont le nom est en url, puis on récupère la liste des
+        // messages correspondants à ce canal
         Channel channelToGet = channel.get();
         List<Message> messagesFromChannel = messageService.getAllMessages().stream()
                 .filter(x -> x.getChannel().getChannelId() == channelToGet.getChannelId())
@@ -87,20 +88,21 @@ public class ChannelController {
      * @return
      */
     @PostMapping("channels")
-    public ResponseEntity<String> saveChannel(@RequestBody Channel newChannel) {
+    public ResponseEntity<Object> saveChannel(@RequestBody Channel newChannel) {
 
         Optional<Channel> channelToPost = channelService.getOneChannelByName(newChannel.getChannelName());
 
         // si le nom dans le corps de la requête correspond à un canal existant,
         // renvoie une erreur "Bad Request"
         if (channelToPost.isPresent()) {
-            return ResponseEntity.badRequest().header("Erreur", "Ce canal existe déjà").build();
+            return ResponseEntity.badRequest().body("ce canal existe déjà");
         }
 
         // si le nom dans le corps de la requête ne correspond à aucun canal existant,
         // ajoute le nouveau canal
-        channelService.addChannel(newChannel);
-        return ResponseEntity.ok("Le canal a bien été créé");
+        Channel postChannel = channelToPost.get();
+        channelService.addChannel(postChannel);
+        return ResponseEntity.ok(postChannel);
 
     }
 
@@ -117,7 +119,7 @@ public class ChannelController {
 
         // si le canal n'existe pas, renvoie une erreur "Not Found"
         if (channelToDelete.isEmpty()) {
-            return ResponseEntity.notFound().header("Erreur", "Aucun canal trouvé").build();
+            return ResponseEntity.notFound().build();
         }
 
         // si le canal est vérouillé, renvoie une erreur "Bad Request"
@@ -127,7 +129,7 @@ public class ChannelController {
 
         // si le canal existe et n'est pas vérouillé, supprime le canal
         channelService.deleteByName(channelName);
-        return ResponseEntity.ok("Le canal a bien été supprimé");
+        return ResponseEntity.ok().build();
 
     }
 
@@ -150,21 +152,21 @@ public class ChannelController {
 
         // si le canal n'existe pas, renvoie une erreur "Not Found"
         if (channelToPut.isEmpty()) {
-            return ResponseEntity.notFound().header("Erreur", "Aucun canal trouvé").build();
+            return ResponseEntity.notFound().build();
         }
 
         // si l'id du canal dont le nom est dans l'url et l'id' renvoyé par le corps de
         // la requête ne sont pas
         // identiques, renvoie une erreur "Bad Request"
         if (!channelId.equals(modification.getChannelId())) {
-            return ResponseEntity.badRequest().header("Erreur", "Ce canal ne correspond pas à la modification demandée")
-                    .build();
+            return ResponseEntity.badRequest().body("Ce canal ne correspond pas à la modification demandée");
+
         }
 
         // si le canal est vérouillé, renvoie une erreur "Bad Request"
         if (channelToPut.get().getLocked() == 1) {
-            return ResponseEntity.badRequest().header("Erreur", "Ce canal est vérouillé et ne peut être modifié")
-                    .build();
+            return ResponseEntity.badRequest().body("Ce canal est vérouillé et ne peut être modifié");
+
         }
 
         // si le canal existe, que le nom en url et en corps de la requête
@@ -187,22 +189,28 @@ public class ChannelController {
 
         Optional<Channel> channelToPatch = channelService.getOneChannelByName(channelName);
 
+        Optional<Channel> channel = channelService.getOneChannelByName(patch.getChannelName());
+
         // si le canal n'existe pas, renvoie une erreur "Not Found"
         if (channelToPatch.isEmpty()) {
-            return ResponseEntity.notFound().header("Erreur", "Aucun canal trouvé").build();
+            return ResponseEntity.notFound().build();
         }
 
         // si le nom en url et le nom renvoyé par le corps de la requête ne sont pas
         // identiques, renvoie une erreur "Bad Request"
         if (!channelName.equals(patch.getChannelName())) {
-            return ResponseEntity.badRequest().header("Erreur", "Ce canal ne correspond pas à la modification demandée")
-                    .build();
+            return ResponseEntity.badRequest().body("Ce canal ne correspond pas à la modification demadnée");
+
         }
 
         // si le canal est vérouillé, renvoie une erreur "Bad Request"
         if (channelToPatch.get().getLocked() == 1) {
-            return ResponseEntity.badRequest().header("Erreur", "Ce canal est vérouillé et ne peut être modifié")
-                    .build();
+            return ResponseEntity.badRequest().body("Ce canal est vérouillé et ne peut être modifié");
+
+        }
+
+        if (channel.isPresent()) {
+            return ResponseEntity.badRequest().body("le canal existe dejà");
         }
 
         channelService.patchChannel(channelName, patch);

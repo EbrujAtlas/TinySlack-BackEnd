@@ -11,7 +11,7 @@ import fr.groupe_3.projet_certif.entity.User;
 import fr.groupe_3.projet_certif.service.UserService;
 
 @RestController
-//Permet de gérer le CORS
+// Permet de gérer le CORS
 @CrossOrigin(origins = "*")
 @RequestMapping("tinyslack")
 public class UserController {
@@ -65,7 +65,7 @@ public class UserController {
         // si le nom dans le corps de la requête correspond à un utilisteur existant,
         // renvoie une erreur "Bad Request"
         if (userService.getUserByUserName(newUser.getUserName()).isPresent()) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("l'utilisateur existe déjà");
         }
 
         // si le nom dans le corps de la requête ne correspond à aucun utilisateur
@@ -83,7 +83,7 @@ public class UserController {
      * @return
      */
     @DeleteMapping("users/{name}")
-    public ResponseEntity<String> deleteUser(@PathVariable("name") String userName) {
+    public ResponseEntity<User> deleteUser(@PathVariable("name") String userName) {
 
         Optional<User> userToDelete = userService.getUserByUserName(userName);
 
@@ -94,7 +94,7 @@ public class UserController {
 
         // si l'utilisateur existe, supprime l'utilisateur
         userService.deleteByUserName(userName);
-        return ResponseEntity.ok("L'utilisateur a bien été supprimé");
+        return ResponseEntity.ok().build();
 
     }
 
